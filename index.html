@@ -1,0 +1,465 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FriendMatch ❤️</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff6b9d, #8b5cf6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 25px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+}
+
+.logo {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #777;
+    margin-bottom: 25px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    margin: 8px 0;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #ff4f91;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ff4f91, #8b5cf6);
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.hidden {
+    display: none;
+}
+
+.question {
+    font-size: 21px;
+    color: #333;
+    margin: 20px 0;
+    line-height: 1.5;
+}
+
+.option {
+    background: #f7f7f7;
+    color: #333;
+    border: 2px solid #eee;
+    margin-top: 10px;
+}
+
+.option:hover {
+    background: #ffe8f0;
+    border-color: #ff6b9d;
+}
+
+.progress {
+    color: #888;
+    margin-top: 10px;
+}
+
+.score {
+    font-size: 70px;
+    font-weight: bold;
+    color: #ff4f91;
+    margin: 20px 0;
+}
+
+.result-text {
+    font-size: 20px;
+    color: #444;
+    line-height: 1.5;
+}
+
+.names {
+    font-size: 22px;
+    font-weight: bold;
+    color: #8b5cf6;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- START SCREEN -->
+    <div id="startScreen">
+
+        <div class="logo">❤️</div>
+
+        <h1>FriendMatch</h1>
+
+        <p class="subtitle">
+            Discover your friendship compatibility!
+        </p>
+
+        <input
+            type="text"
+            id="name1"
+            placeholder="Enter first person's name"
+        >
+
+        <input
+            type="text"
+            id="name2"
+            placeholder="Enter second person's name"
+        >
+
+        <button onclick="startQuiz()">
+            Start Quiz 🚀
+        </button>
+
+    </div>
+
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="hidden">
+
+        <div class="logo">🤔</div>
+
+        <p class="progress" id="progress">
+            Question 1 of 7
+        </p>
+
+        <div class="question" id="question">
+            Question goes here
+        </div>
+
+        <div id="options"></div>
+
+    </div>
+
+
+    <!-- RESULT SCREEN -->
+    <div id="resultScreen" class="hidden">
+
+        <div class="logo">🎉</div>
+
+        <h1>Your Result</h1>
+
+        <p class="names" id="resultNames"></p>
+
+        <div class="score" id="score">
+            0%
+        </div>
+
+        <p class="result-text" id="resultText"></p>
+
+        <button onclick="restartQuiz()">
+            Try Again 🔄
+        </button>
+
+        <button onclick="shareResult()">
+            Share Result 📤
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const questions = [
+
+    {
+        question: "Agar tumhara friend sad ho, tum kya karoge?",
+        options: [
+            "Usay akela chhor dunga",
+            "Us se baat karunga ❤️",
+            "Usay funny memes bhejunga 😂",
+            "Mujhe pata hi nahi chalega"
+        ]
+    },
+
+    {
+        question: "Tum dono ko free time mile to kya karoge?",
+        options: [
+            "Movie dekhenge 🎬",
+            "Games khelenge 🎮",
+            "Bahar jayenge 🌎",
+            "Bas chat karenge 💬"
+        ]
+    },
+
+    {
+        question: "Agar friend tumhara birthday bhool jaye?",
+        options: [
+            "Gussa ho jaunga 😡",
+            "Maaf kar dunga ❤️",
+            "Mazak karunga 😂",
+            "Friendship khatam!"
+        ]
+    },
+
+    {
+        question: "Tum apne friend ke saath secret share kar sakte ho?",
+        options: [
+            "Bilkul nahi",
+            "Haan, full trust 🤝",
+            "Sirf important secrets",
+            "Maybe 😅"
+        ]
+    },
+
+    {
+        question: "Agar tum dono ke beech argument ho jaye?",
+        options: [
+            "Main pehle sorry bolunga",
+            "Friend ko sorry bolna chahiye",
+            "Thori der chup rahunga",
+            "Ignore kar dunga"
+        ]
+    },
+
+    {
+        question: "Tumhare friend ki success par tumhara reaction?",
+        options: [
+            "Jealous 😒",
+            "Super happy! 🎉",
+            "Normal",
+            "Usay treat dunga 🍕"
+        ]
+    },
+
+    {
+        question: "Tumhari friendship ko ek word mein kya kahoge?",
+        options: [
+            "Amazing ❤️",
+            "Crazy 😂",
+            "Strong 💪",
+            "Unpredictable 😎"
+        ]
+    }
+
+];
+
+let currentQuestion = 0;
+let totalScore = 0;
+let person1 = "";
+let person2 = "";
+
+
+function startQuiz() {
+
+    person1 = document.getElementById("name1").value.trim();
+    person2 = document.getElementById("name2").value.trim();
+
+    if (person1 === "" || person2 === "") {
+        alert("Please dono names enter karein ❤️");
+        return;
+    }
+
+    currentQuestion = 0;
+    totalScore = 0;
+
+    document.getElementById("startScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.remove("hidden");
+
+    showQuestion();
+}
+
+
+function showQuestion() {
+
+    const q = questions[currentQuestion];
+
+    document.getElementById("progress").innerText =
+        "Question " + (currentQuestion + 1) +
+        " of " + questions.length;
+
+    document.getElementById("question").innerText =
+        q.question;
+
+    const optionsDiv = document.getElementById("options");
+
+    optionsDiv.innerHTML = "";
+
+    q.options.forEach((option, index) => {
+
+        const button = document.createElement("button");
+
+        button.innerText = option;
+        button.className = "option";
+
+        button.onclick = function() {
+            answerQuestion(index);
+        };
+
+        optionsDiv.appendChild(button);
+
+    });
+}
+
+
+function answerQuestion(answer) {
+
+    /*
+       Har answer ko score diya gaya hai.
+       Pehla answer = 40
+       Doosra = 100
+       Teesra = 80
+       Chautha = 60
+    */
+
+    const scores = [40, 100, 80, 60];
+
+    totalScore += scores[answer];
+
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+
+        showQuestion();
+
+    } else {
+
+        showResult();
+
+    }
+}
+
+
+function showResult() {
+
+    let finalScore =
+        Math.round(totalScore / questions.length);
+
+    document.getElementById("quizScreen")
+        .classList.add("hidden");
+
+    document.getElementById("resultScreen")
+        .classList.remove("hidden");
+
+    document.getElementById("resultNames").innerText =
+        person1 + " ❤️ " + person2;
+
+    document.getElementById("score").innerText =
+        finalScore + "%";
+
+
+    let message = "";
+
+    if (finalScore >= 90) {
+
+        message =
+        "Wow! 🔥 Aap dono ki friendship next level hai! Best friends forever! ❤️";
+
+    } else if (finalScore >= 75) {
+
+        message =
+        "Amazing! 😍 Aap dono ki friendship bohat strong hai!";
+
+    } else if (finalScore >= 60) {
+
+        message =
+        "Nice! 😊 Aap dono ki friendship achi hai, bas thora aur time saath guzaro.";
+
+    } else {
+
+        message =
+        "Haha 😂 Lagta hai aap dono ko ek doosre ko aur samajhne ki zaroorat hai!";
+
+    }
+
+    document.getElementById("resultText").innerText =
+        message;
+}
+
+
+function restartQuiz() {
+
+    document.getElementById("resultScreen")
+        .classList.add("hidden");
+
+    document.getElementById("startScreen")
+        .classList.remove("hidden");
+
+    document.getElementById("name1").value = "";
+    document.getElementById("name2").value = "";
+
+}
+
+
+function shareResult() {
+
+    const score =
+        document.getElementById("score").innerText;
+
+    const text =
+        person1 + " ❤️ " + person2 +
+        " ka Friendship Score " +
+        score +
+        " hai! 🎉";
+
+    if (navigator.share) {
+
+        navigator.share({
+            title: "FriendMatch Result",
+            text: text
+        });
+
+    } else {
+
+        navigator.clipboard.writeText(text);
+
+        alert(
+            "Result copy ho gaya! Ab aap ise WhatsApp ya kisi bhi app mein paste kar sakte hain."
+        );
+
+    }
+}
+
+</script>
+
+</body>
+</html>
